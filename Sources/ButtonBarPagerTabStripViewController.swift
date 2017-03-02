@@ -256,8 +256,15 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         buttonBarView.moveTo(index: indexPath.item, animated: true, swipeDirection: .none, pagerScroll: .yes)
         shouldUpdateButtonBarView = false
         
-        let oldCell = buttonBarView.cellForItem(at: IndexPath(item: currentIndex, section: 0)) as? ButtonBarViewCell
-        let newCell = buttonBarView.cellForItem(at: IndexPath(item: indexPath.item, section: 0)) as? ButtonBarViewCell
+        let oldIndexPath = IndexPath(item: currentIndex, section: 0)
+        let newIndexPath = IndexPath(item: indexPath.item, section: 0)
+        
+        collectionView.reloadItems(at: [oldIndexPath, newIndexPath])
+        collectionView.layoutIfNeeded()
+        // Another solution might be to deactivate iOS 10 CollectionView prefetching (collectionView.isPrefetchingEnabled = false)
+        
+        let oldCell = buttonBarView.cellForItem(at: oldIndexPath) as? ButtonBarViewCell
+        let newCell = buttonBarView.cellForItem(at: newIndexPath) as? ButtonBarViewCell
         if pagerBehaviour.isProgressiveIndicator {
             if let changeCurrentIndexProgressive = changeCurrentIndexProgressive {
                 changeCurrentIndexProgressive(oldCell, newCell, 1, true, true)
